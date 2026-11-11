@@ -199,11 +199,9 @@ def mailu_send_email(to:list[str],subject:str,body:str,cc:list[str]|None=None):
     """Send a message from the selected mailbox, with optional carbon-copy recipients."""
     return submit(to,cc or [],subject,body)
 
-@mcp.tool()
-def mailu_reply(email:str,id:str,body:str,cc:list[str]|None=None):
-    """Reply to a selected INBOX message with optional explicit carbon copies."""
+def reply_headers(mail,id):
     if not re.fullmatch(r"\d+-\d+",id):raise ValueError("Select a message returned by mailu_list_messages.")
-    conn,epoch=mailbox(email)
+    conn,epoch=mailbox(mail)
     try:
         validity,uid=id.split("-")
         if epoch!=validity:raise ValueError("Mailbox changed. Refresh the message list.")
@@ -212,6 +210,14 @@ def mailu_reply(email:str,id:str,body:str,cc:list[str]|None=None):
         from email.parser import BytesParser
         src=BytesParser(policy=__import__("email").policy.default).parsebytes(data)
     finally:conn.logout()
+    return src
+
+@mcp.tool()
+def mailu_reply(email:str,id:str,body:str,cc:list[str]|None=None):
+    """Reply to a selected INBOX message with optional explicit carbon copies."""
+    sender=os.getenv("MAILU_SMTP_USER") or os.getenv("MAILU_IMAP_USER","")
+    if address(sender)!=address(email):raise ValueError("Select the SMTP identity for this mailbox.")
+    src=reply_headers(email,id)
     recipients=[addr for _,addr in getaddresses([str(src.get("Reply-To") or src.get("From") or "")])]
     subj=str(src.get("Subject",""));mid=str(src.get("Message-ID","")).strip()
     ids=re.findall(r"<[^<>\s]+>",str(src.get("References",""))+" "+mid)[-20:]
