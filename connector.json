@@ -1,0 +1,22 @@
+{
+  "id": "mailu",
+  "version": "0.2.0",
+  "repository": "https://github.com/LastDreamTeam/LDAI_MailuMCP",
+  "runtime": "python",
+  "toolPrefixes": [
+    "mailu_"
+  ],
+  "providerEnvironment": [
+    "MAILU_API_URL",
+    "MAILU_API_TOKEN_FILE",
+    "MAILU_IMAP_HOST",
+    "MAILU_IMAP_USER",
+    "MAILU_IMAP_PORT",
+    "MAILU_IMAP_PASSWORD_FILE",
+    "MAILU_NEW_PASSWORD_DIR"
+  ],
+  "requiredMulti": [
+    "MAILU_API_URL",
+    "MAILU_API_TOKEN_FILE"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "mailu": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "${PLUGIN_ROOT}/router.py"
+      ],
+      "cwd": "${PLUGIN_ROOT}"
+    }
+  }
+}

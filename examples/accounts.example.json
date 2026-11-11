@@ -1,0 +1,23 @@
+{
+  "connector": "mailu",
+  "accounts": {
+    "work": {
+      "env": {
+        "MAILU_API_URL": "https://mail.example.org/api/v1",
+        "MAILU_API_TOKEN_FILE": "/private/work/mailu-token",
+        "MAILU_IMAP_HOST": "mail.example.org",
+        "MAILU_IMAP_USER": "work@example.org",
+        "MAILU_IMAP_PASSWORD_FILE": "/private/work/imap-password"
+      }
+    },
+    "personal": {
+      "env": {
+        "MAILU_API_URL": "https://mail.example.org/api/v1",
+        "MAILU_API_TOKEN_FILE": "/private/personal/mailu-token",
+        "MAILU_IMAP_HOST": "mail.example.org",
+        "MAILU_IMAP_USER": "personal@example.org",
+        "MAILU_IMAP_PASSWORD_FILE": "/private/personal/imap-password"
+      }
+    }
+  }
+}
