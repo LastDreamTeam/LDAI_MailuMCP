@@ -1,0 +1,26 @@
+{
+  "product": "mailu",
+  "tool": "mailu_list_messages",
+  "description": "读取所连接邮箱最近十封邮件的列表。",
+  "keys": [
+    "MAILU_IMAP_HOST",
+    "MAILU_IMAP_USER",
+    "MAILU_IMAP_PASSWORD_FILE"
+  ],
+  "required": [
+    "MAILU_IMAP_HOST",
+    "MAILU_IMAP_USER",
+    "MAILU_IMAP_PASSWORD_FILE"
+  ],
+  "private_paths": [
+    "MAILU_IMAP_PASSWORD_FILE"
+  ],
+  "url_keys": [],
+  "entry": "server.py",
+  "args": {
+    "limit": 10
+  },
+  "bound_args": {
+    "email": "MAILU_IMAP_USER"
+  }
+}

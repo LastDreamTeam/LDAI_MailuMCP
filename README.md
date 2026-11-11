@@ -34,3 +34,5 @@ MCP 入口为 `router.py`，需要 Python 3.11+。主机在本地保存账号配
 
 - [Mailu/Mailu](https://github.com/Mailu/Mailu) · 7614 stars，默认分支 5425 次提交
 - [manganate006/mailu-mcp](https://github.com/manganate006/mailu-mcp) · 0 stars，默认分支 19 次提交
+
+[原生插件页多账号接入候选版：部署、覆盖范围与验收](native_account/README.md)
