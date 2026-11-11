@@ -147,5 +147,76 @@ def mailu_read_message(email:str,id:str):
     finally:
         conn.logout()
 
+
+import smtplib
+from email.message import EmailMessage
+from email.utils import getaddresses,make_msgid
+
+def provisioned_password(name):
+    import hashlib
+    folder=os.getenv("MAILU_NEW_PASSWORD_DIR")
+    if not folder:raise ValueError("Set MAILU_NEW_PASSWORD_DIR for the selected account.")
+    root=Path(folder).expanduser().resolve(strict=True)
+    p=root/(hashlib.sha256(address(name).encode()).hexdigest()+".txt")
+    if p.is_symlink() or p.resolve().parent!=root or not p.is_file():raise ValueError("Provision this mailbox's password file first.")
+    value=p.read_text(encoding="utf-8-sig").rstrip("\r\n")
+    if not value:raise ValueError("Empty password file.")
+    return value
+
+@mcp.tool()
+def mailu_change_password(email:str):
+    """Set a mailbox password using the same private file convention as mailbox creation."""
+    name=address(email)
+    if mailu_get_mailbox(name).get("email","").lower()!=name:raise ValueError("Mailbox not found.")
+    request("MAILU_API_URL","/user/"+quote(name,safe=""),json.dumps({"raw_password":provisioned_password(name)}).encode(),
+            {"Authorization":secret("MAILU_API_TOKEN_FILE"),"Content-Type":"application/json"},method="PATCH")
+    return {"provider_accepted":True,"mailbox":name}
+
+def submit(to,cc,subject,body,reply_id=None,refs=None):
+    sender=address(os.environ.get("MAILU_SMTP_USER") or os.environ.get("MAILU_IMAP_USER",""))
+    if not to or len(to)+len(cc)>100 or not body or len(body)>500000 or any(c in subject for c in "\r\n"):
+        raise ValueError("Provide recipients, a one-line subject and a message body.")
+    msg=EmailMessage();msg["From"]=sender;msg["To"]=", ".join(address(x) for x in to)
+    if cc:msg["Cc"]=", ".join(address(x) for x in cc)
+    msg["Subject"]=subject;msg["Message-ID"]=make_msgid(domain=sender.split("@")[-1])
+    if reply_id:msg["In-Reply-To"]=reply_id;msg["References"]=refs or reply_id
+    msg.set_content(body)
+    host=os.getenv("MAILU_SMTP_HOST")
+    if not host:raise ValueError("Set MAILU_SMTP_HOST and mailbox credentials in the account manager.")
+    mode=os.getenv("MAILU_SMTP_MODE","starttls")
+    if mode not in ("starttls","tls"):raise ValueError("Select starttls or tls.")
+    port=int(os.getenv("MAILU_SMTP_PORT") or ("465" if mode=="tls" else "587"))
+    context=ssl.create_default_context()
+    password=secret("MAILU_SMTP_PASSWORD_FILE" if os.getenv("MAILU_SMTP_PASSWORD_FILE") else "MAILU_IMAP_PASSWORD_FILE")
+    with (smtplib.SMTP_SSL(host,port,context=context,timeout=30) if mode=="tls" else smtplib.SMTP(host,port,timeout=30)) as smtp:
+        if mode=="starttls":smtp.starttls(context=context)
+        smtp.login(sender,password)
+        refused=smtp.send_message(msg)
+    return {"message_id":str(msg["Message-ID"]),"accepted_by_smtp":not refused,"refused_recipients":list(refused)}
+
+@mcp.tool()
+def mailu_send_email(to:list[str],subject:str,body:str,cc:list[str]|None=None):
+    """Send a message from the selected mailbox, with optional carbon-copy recipients."""
+    return submit(to,cc or [],subject,body)
+
+@mcp.tool()
+def mailu_reply(email:str,id:str,body:str,cc:list[str]|None=None):
+    """Reply to a selected INBOX message with optional explicit carbon copies."""
+    if not re.fullmatch(r"\d+-\d+",id):raise ValueError("Select a message returned by mailu_list_messages.")
+    conn,epoch=mailbox(email)
+    try:
+        validity,uid=id.split("-")
+        if epoch!=validity:raise ValueError("Mailbox changed. Refresh the message list.")
+        data=fetch(conn,uid,"(BODY.PEEK[HEADER.FIELDS (FROM REPLY-TO SUBJECT MESSAGE-ID REFERENCES)]<0.65536>)")
+        if not data:raise ValueError("Message header unavailable.")
+        from email.parser import BytesParser
+        src=BytesParser(policy=__import__("email").policy.default).parsebytes(data)
+    finally:conn.logout()
+    recipients=[addr for _,addr in getaddresses([str(src.get("Reply-To") or src.get("From") or "")])]
+    subj=str(src.get("Subject",""));mid=str(src.get("Message-ID","")).strip()
+    ids=re.findall(r"<[^<>\s]+>",str(src.get("References",""))+" "+mid)[-20:]
+    return submit(recipients,cc or [],subj if subj.lower().startswith("re:") else "Re: "+subj,body,
+                  mid if re.fullmatch(r"<[^<>\s]+>",mid) else None," ".join(ids))
+
 if __name__=="__main__":
     mcp.run(transport="stdio")

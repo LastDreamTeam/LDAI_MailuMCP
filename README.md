@@ -10,6 +10,12 @@ Python 3.11+。运行 `python -m venv .venv` 后，在该环境中运行 `python
 
 使用 `python client_config.py cursor`、`python client_config.py dsh` 或 `python client_config.py codex` 输出对应客户端的配置。将其合并到已有 MCP 或 DSH 插件列表。配置生成器接受重复的 `--env NAME=VALUE` 以传递路径和站点设置。
 
+## 账号管理窗口
+
+在 Codex 对本插件说「管理账号」，或直接运行 python account_manager.py。在窗口中新增连接、编辑显示名和标识、重新连接或断开，修改后刷新客户端工具列表。站点和凭据文件路径仅存当前操作系统用户的配置。已有自定义适配器保留其授权方式；可并行添加原生账号。图形窗口需要 Python 的 Tk 组件，远程无桌面执行器可使用账号 JSON。
+
+管理 API 注册邮箱、设置密码、管理别名。改密使用 MAILU_NEW_PASSWORD_DIR 下以小写邮箱地址 SHA-256 命名的 .txt 私有文件。IMAP 读信，SMTP 支持发送、抄送和带 In-Reply-To 的回复。发送使用所选邮箱的独立 SMTP 凭据（可与此账号的 IMAP 登录一致）。SMTP 接受表示提交到邮件服务器，收件端投递另行确认。
+
 ## 多账号和终端更新
 
 MCP 入口为 `router.py`，需要 Python 3.11+。主机在本地保存账号配置，默认位置为 `~/.config/ldai-mcp/mailu/accounts.json`，也可用 `LDAI_ACCOUNTS_FILE` 指定。复制 [两账号示例](examples/accounts.example.json)，将地址与路径换成自己的值。每个账号可以对应不同的 Mailu 站点、管理令牌或 IMAP 邮箱。只读个人收件箱时仅需该账号的 IMAP 配置。

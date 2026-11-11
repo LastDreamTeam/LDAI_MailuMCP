@@ -44,5 +44,5 @@ def clean(value):
         return [clean(x) for x in value]
     if isinstance(value,dict):
         return {k:clean(v) for k,v in value.items() if not re.search(
-            r"passw|passwd|token|secret|private.?key|api.?key|^hash$|^u_hash$|^two.?factor|otp|dkim_private",k,re.I)}
+            r"passw|passwd|token|secret|private.?key|api.?key|^hash$|^u_hash$|^md5$|^sha(?:1|256|512)$|^two.?factor|otp|dkim_private",k,re.I)}
     return value

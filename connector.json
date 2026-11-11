@@ -1,6 +1,6 @@
 {
   "id": "mailu",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "repository": "https://github.com/LastDreamTeam/LDAI_MailuMCP",
   "runtime": "python",
   "toolPrefixes": [
@@ -13,10 +13,30 @@
     "MAILU_IMAP_USER",
     "MAILU_IMAP_PORT",
     "MAILU_IMAP_PASSWORD_FILE",
-    "MAILU_NEW_PASSWORD_DIR"
+    "MAILU_NEW_PASSWORD_DIR",
+    "MAILU_SMTP_HOST",
+    "MAILU_SMTP_PORT",
+    "MAILU_SMTP_MODE",
+    "MAILU_SMTP_USER",
+    "MAILU_SMTP_PASSWORD_FILE"
   ],
   "requiredMulti": [
     "MAILU_API_URL",
     "MAILU_API_TOKEN_FILE"
-  ]
+  ],
+  "title": "Mailu 邮箱",
+  "managerFields": {
+    "MAILU_API_URL": "Mailu API 地址（含 /api/v1）",
+    "MAILU_API_TOKEN_FILE": "管理 Token 文件",
+    "MAILU_NEW_PASSWORD_DIR": "邮箱新密码文件目录",
+    "MAILU_IMAP_HOST": "IMAP 服务器",
+    "MAILU_IMAP_PORT": "IMAP TLS 端口",
+    "MAILU_IMAP_USER": "IMAP 邮箱",
+    "MAILU_IMAP_PASSWORD_FILE": "IMAP 密码文件",
+    "MAILU_SMTP_HOST": "SMTP 服务器",
+    "MAILU_SMTP_PORT": "SMTP 端口",
+    "MAILU_SMTP_MODE": "SMTP 加密模式（starttls / tls）",
+    "MAILU_SMTP_USER": "SMTP 邮箱",
+    "MAILU_SMTP_PASSWORD_FILE": "SMTP 密码文件"
+  }
 }
