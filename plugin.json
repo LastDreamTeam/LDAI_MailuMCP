@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "mailu",
-  "version": "0.3.0",
+  "version": "1.1.0",
   "description": "使用所配置 Mailu 站点的原生 REST API 管理邮箱和别名，可通过单独授权的 IMAP 账号读取邮件。",
   "author": {
     "name": "LastDreamTeam"

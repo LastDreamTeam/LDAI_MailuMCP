@@ -1,0 +1,9 @@
+{
+  "origin": "https://bridge.example.org",
+  "approval_port": 18642,
+  "service_port": 18641,
+  "state_dir": "./private-oauth-state",
+  "products": {
+    "primary": "."
+  }
+}
