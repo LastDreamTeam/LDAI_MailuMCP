@@ -1,6 +1,6 @@
 {
   "name": "mailu",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "使用所配置 Mailu 站点的原生 REST API 管理邮箱和别名，可通过单独授权的 IMAP 账号读取邮件。",
   "author": {
     "name": "LastDreamTeam"
@@ -9,7 +9,7 @@
   "homepage": "https://github.com/LastDreamTeam/LDAI_MailuMCP",
   "license": "AGPL-3.0-only",
   "interface": {
-    "displayName": "Mailu 邮箱",
+    "displayName": "Mailu Mail",
     "shortDescription": "管理 Mailu 邮箱与别名，阅读邮件",
     "longDescription": "使用所配置 Mailu 站点的原生 REST API 管理邮箱和别名，可通过单独授权的 IMAP 账号读取邮件。",
     "developerName": "LastDreamTeam",

@@ -1,6 +1,6 @@
 {
   "id": "mailu",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "repository": "https://github.com/LastDreamTeam/LDAI_MailuMCP",
   "runtime": "python",
   "toolPrefixes": [
@@ -24,7 +24,7 @@
     "MAILU_API_URL",
     "MAILU_API_TOKEN_FILE"
   ],
-  "title": "Mailu 邮箱",
+  "title": "Mailu Mail",
   "managerFields": {
     "MAILU_API_URL": "Mailu API 地址（含 /api/v1）",
     "MAILU_API_TOKEN_FILE": "管理 Token 文件",

@@ -1,4 +1,4 @@
-# Mailu 邮箱 MCP
+# Mailu Mail MCP
 
 > **自用项目** · 本仓库主要供维护者自用。
 
